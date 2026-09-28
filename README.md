@@ -47,11 +47,12 @@ The evaluator measures worksheet coverage, source-cell coverage, formula coverag
 
 ## Included Japanese-style test
 
-`input/japanese_program_spec_test.xlsx` is the primary regression workbook. It includes a cover, repeated per-sheet headers, width-2 grid columns, merged screen layout, function list, process flow, article-style detailed specification, messages, and a formula.
+`tests/make_japanese_spec_test.py` creates the primary regression workbook at `input/japanese_program_spec_test.xlsx`. It includes a cover, repeated per-sheet headers, width-2 grid columns, merged screen layout, function list, process flow, article-style detailed specification, messages, and a formula.
 
 Example:
 
 ```bash
+python tests/make_japanese_spec_test.py
 python -m src.quality_loop input/japanese_program_spec_test.xlsx
 ```
 

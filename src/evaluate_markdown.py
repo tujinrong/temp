@@ -112,7 +112,7 @@ def evaluate(xlsx: str | Path, markdown: str | Path, threshold: float = 90.0) ->
     score = round(score, 2)
     return Evaluation(
         score=score,
-        passed=score >= threshold and sheet_cov == 1.0 and cell_cov >= 0.90,
+        passed=score >= threshold and sheet_cov == 1.0 and cell_cov >= 0.90 and formula_cov >= 0.90 and layout >= 0.70,
         threshold=threshold,
         sheet_coverage=round(100 * sheet_cov, 2),
         cell_coverage=round(100 * cell_cov, 2),

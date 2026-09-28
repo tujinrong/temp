@@ -2,51 +2,71 @@
 
 ## Purpose
 
-This repository is a workspace for converting Excel workbooks into clean, readable Markdown files.
+This repository converts Excel workbooks, especially Japanese programming/system specification workbooks, into readable Markdown and evaluates the conversion for fidelity.
 
 ## Directory structure
 
-- `input/` — source Excel files (`.xlsx`, `.xlsm`, or `.xls` when supported).
-- `output/` — generated Markdown files.
-- `AGENTS.md` — instructions for agents working in this repository.
+- `input/` — source `.xlsx` workbooks.
+- `output/` — final generated Markdown.
+- `reports/` — per-loop candidates and evaluation reports.
+- `src/` — converter, workbook reader, evaluator, and quality-loop programs.
 
-## Workflow
+## Expected source style
 
-When asked to convert an Excel file to Markdown:
+Japanese program specifications often contain:
 
-1. Look for the source workbook in `input/`.
-2. Inspect the workbook before converting it:
-   - identify all worksheets;
-   - determine the used range on each worksheet;
-   - preserve meaningful headings, labels, and table structure;
-   - note formulas, merged cells, dates, percentages, and numeric formatting when they affect meaning.
-3. Create Markdown output in `output/`.
-4. Use the workbook filename as the base output name. For example:
-   - `input/report.xlsx` → `output/report.md`
-5. If a workbook contains multiple worksheets, put them in one Markdown file by default:
-   - start with a level-1 heading using the workbook name;
-   - use a level-2 heading for each worksheet;
-   - convert tabular data to Markdown tables where practical.
-6. Preserve the data faithfully. Do not invent, summarize, translate, or reinterpret cell values unless explicitly requested.
-7. For blank cells, use an empty Markdown table cell.
-8. If a worksheet is too complex for a normal Markdown table, preserve the information in the clearest Markdown structure possible and briefly note any conversion limitation.
-9. Do not modify or delete the original Excel file unless explicitly instructed.
-10. After conversion, verify that all non-empty worksheets and meaningful data from the source are represented in the Markdown output.
+- a cover sheet such as `表紙` or `カバー`;
+- a repeated header on each sheet with `機能名`, `作成者`, `作成日`, `版数`, etc.;
+- many very narrow layout-grid columns, often width `2`;
+- merged cells spanning those narrow columns;
+- function/item lists;
+- screen/form design sheets;
+- processing-flow sheets;
+- detailed article-like specification sections and message/validation tables.
 
-## Output quality
+The converter must treat narrow columns as a visual layout grid rather than blindly creating dozens of empty Markdown columns.
 
-- Use UTF-8 text.
-- Keep Markdown valid and easy to read.
-- Escape pipe characters inside table cells when needed.
-- Avoid unnecessary HTML.
-- Preserve Unicode text.
-- Keep numeric identifiers as text when leading zeros are meaningful.
-- Prefer displayed/formatted values when formatting carries business meaning.
+## Conversion rules
 
-## File handling
+1. Read source workbooks from `input/`.
+2. Never modify or delete the original workbook unless explicitly instructed.
+3. Preserve every non-empty worksheet and meaningful source value.
+4. Preserve formulas and important layout metadata at higher fidelity levels.
+5. Convert cover sheets to Markdown title/metadata sections.
+6. Extract repeated sheet headers separately so function name, author, date, version, and document type remain visible.
+7. Convert lists/definition tables to Markdown tables or lists.
+8. Convert processing flows to Mermaid when a reliable sequence can be inferred. State when branch direction is inferred.
+9. Convert screen/form layouts to HTML tables when merged cells/colspan are needed. Markdown tables may be used for simple field definitions.
+10. Convert detailed prose specifications to Markdown headings, paragraphs, lists, and tables rather than one giant grid.
+11. Escape Markdown pipe characters when necessary and preserve Unicode/Japanese text.
+12. Do not invent, summarize, translate, or reinterpret requirements unless explicitly requested.
 
-Treat files in `input/` as source material and files in `output/` as generated artifacts. Do not overwrite unrelated files.
+## Quality loop
+
+Use `python -m src.quality_loop <xlsx>` for normal work.
+
+The quality loop may run up to **5 passes**. Each pass increases fidelity if the evaluator rejects the previous result.
+
+For every executed loop, report:
+
+- loop number and fidelity mode;
+- total score and PASS/RETRY status;
+- worksheet coverage;
+- source-cell coverage;
+- formula coverage;
+- structure score;
+- layout score;
+- detected problems;
+- changes recommended for the next loop.
+
+Stop early if a pass meets the configured threshold. If all five fail, keep the fifth-pass output as best effort and clearly mark it for review.
 
 ## Completion
 
-A conversion task is complete when the Markdown file exists in `output/`, the workbook's relevant sheets and data have been checked against the source, and any unavoidable conversion limitations have been reported.
+A task is complete when:
+
+- the final Markdown exists in `output/`;
+- the evaluation history exists in `reports/`;
+- all non-empty worksheets are represented;
+- the evaluator has passed, or the fifth pass has been reported as review-required;
+- the final response summarizes every executed loop and the final result.

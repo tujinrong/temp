@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "review_status": "source-reviewed",
+  "source_sheet": "画面ハードコピー_ログイン",
+  "image_sha256": "2dfc201f5f3c49d404369464a4ec9e2cd5a466ba6fd92df7038bfed8012a9600",
+  "field_sheet": "画面仕様_ログイン",
+  "title": "ログイン",
+  "form_id": "login",
+  "rows": [
+    [
+      "errorArea"
+    ],
+    [
+      "userId"
+    ],
+    [
+      "password"
+    ],
+    [
+      "loginButton",
+      "clearButton"
+    ]
+  ],
+  "message_ids": [
+    "errorArea"
+  ],
+  "review_note": "Synthetic screenshot visually reviewed against the source field-definition table. This mapping is not OCR and does not establish runtime/default behavior."
+}

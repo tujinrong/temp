@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ログイン — HTML配置参考</title><style>body{font:16px "Noto Sans CJK JP","Yu Gothic",sans-serif;color:#20344a;background:#edf2f7;margin:24px}
+.spec-form{max-width:680px;margin:0 auto;background:white;padding:28px;border:1px solid #c5d3e0;border-radius:10px}
+.spec-form h2{margin-top:0}.spec-row{display:grid;grid-template-columns:150px minmax(0,1fr);align-items:center;gap:12px;margin:18px 0}
+.spec-row label{font-weight:600}.spec-row input{box-sizing:border-box;width:100%;min-width:0;height:40px;padding:8px;font:inherit;border:1px solid #9baebd;border-radius:4px}
+.spec-actions{display:flex;justify-content:flex-end;gap:12px;margin:20px 0}.spec-actions button{padding:10px 22px;font:inherit;border:1px solid #1f4e78;background:white;border-radius:4px;color:#20344a}
+.spec-actions button:first-child{background:#1f4e78;color:white}.spec-message{padding:12px;border-left:4px solid #b9472b;background:#fff4f1;font-size:14px}
+.spec-comments{border-top:1px solid #d7e0e7;margin-top:24px;padding-top:8px}.spec-comment{font-size:14px;line-height:1.7;margin:12px 0}.spec-source{font-size:13px;line-height:1.7;color:#52687a;max-width:740px;margin:24px auto}
+@media(max-width:520px){body{margin:8px}.spec-form{padding:16px}.spec-row{grid-template-columns:1fr}.spec-actions{justify-content:flex-start}}</style></head><body>
+<section class="spec-form">
+<h2 id="form-title">ログイン</h2>
+<form id="login" aria-labelledby="form-title" data-reference-only="true">
+<!-- callout C05 | target=errorArea: エラーコードに対応するメッセージを画面上部に表示する。 -->
+<div id="errorArea" class="spec-message" role="status" aria-describedby="comment-C05">エラーメッセージ表示領域（位置の参考・実際の文言はメッセージ一覧を参照）</div>
+<!-- callout C01 | target=userId: 半角英数字で入力。必須、最大50文字。 -->
+<div class="spec-row">
+<label for="userId">ユーザーID</label>
+<input id="userId" name="userId" type="text" required maxlength="50" aria-describedby="comment-C01">
+</div>
+<!-- callout C02 | target=password: マスク表示。必須、最大128文字。 -->
+<div class="spec-row">
+<label for="password">パスワード</label>
+<input id="password" name="password" type="password" required maxlength="128" aria-describedby="comment-C02">
+</div>
+<div class="spec-actions">
+<!-- callout C03 | target=loginButton: 入力チェック成功後に認証APIを呼び出す。 -->
+<button id="loginButton" type="button" aria-describedby="comment-C03">ログイン</button>
+<!-- callout C04 | target=clearButton: 入力値を消去する。 -->
+<button id="clearButton" type="button" aria-describedby="comment-C04">クリア</button>
+</div>
+</form>
+<aside class="spec-comments" aria-label="吹き出しコメント">
+<h3>吹き出しコメント</h3>
+<p class="spec-comment" id="comment-C01" data-target="userId"><strong>C01 · userId</strong> — 半角英数字で入力。必須、最大50文字。</p>
+<p class="spec-comment" id="comment-C02" data-target="password"><strong>C02 · password</strong> — マスク表示。必須、最大128文字。</p>
+<p class="spec-comment" id="comment-C03" data-target="loginButton"><strong>C03 · loginButton</strong> — 入力チェック成功後に認証APIを呼び出す。</p>
+<p class="spec-comment" id="comment-C04" data-target="clearButton"><strong>C04 · clearButton</strong> — 入力値を消去する。</p>
+<p class="spec-comment" id="comment-C05" data-target="errorArea"><strong>C05 · errorArea</strong> — エラーコードに対応するメッセージを画面上部に表示する。</p>
+</aside>
+</section>
+<p class="spec-source">配置はレビュー済みハードコピー、項目ID・型・必須・桁数は画面項目定義、コメントは原本の吹き出し図形に基づく。画像だけから制約を推測したものではない。これは静的な配置参考であり、認証・クリア処理を実行しない。空欄から初期値が空文字であるとは断定しない。色・寸法は実装要件ではない。</p></body></html>

@@ -38,3 +38,15 @@ The repair converter consolidates metadata, keeps paragraphs as prose, retains f
 - `docs/EVOLUTION_RUN.md`: rubric scope and reproduction notes.
 
 A passing fixture test is not a measured score for LLM task accuracy or proof of general-purpose conversion quality. Review unspecified source behavior before implementation.
+
+## Form hard-copies and callouts
+
+See [docs/FORM_CALLOUTS.md](docs/FORM_CALLOUTS.md). The new source-reviewed run converts an embedded hard-copy into static semantic HTML and floating callouts into HTML comments plus visible, target-linked notes. It passed 39/39 checks on loop 3.
+
+The downloadable form/callout run bundle contains both required XLSX fixtures and all output assets. These binary fixtures are not included in the Git commit; copy the bundle’s `input/` directory into this checkout before running:
+
+```bash
+python -m src.form_evolution input/japanese_program_spec_with_callouts.xlsx \
+  --contract tests/fixtures/japanese_program_spec_with_callouts.contract.json \
+  --layout-review tests/fixtures/login_hardcopy.layout.json
+```

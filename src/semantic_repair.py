@@ -162,7 +162,7 @@ def questions(info) -> list[str]:
     return result
 
 
-def convert(path: str | Path, revision: int = 4) -> str:
+def convert(path: str | Path, revision: int = 4, *, excluded_sheets: set[str] | None = None) -> str:
     if revision not in (2, 3, 4, 5):
         raise ValueError('revision must be 2..5')
     info = load_xlsx(path)
@@ -182,6 +182,9 @@ def convert(path: str | Path, revision: int = 4) -> str:
     for sheet in info.sheets:
         if sheet.kind == 'cover':
             mapping.append((sheet.name, '文書全体', '文書情報・改訂履歴'))
+            continue
+        if sheet.name in (excluded_sheets or set()):
+            mapping.append((sheet.name, '画面ハードコピー', '画面ハードコピー（HTML再構成）'))
             continue
         pairs = old.metadata_pairs(sheet, max(4, sheet.header_rows))
         function = next((v for k, v in pairs if k in ('機能名', '処理名', '画面名')), sheet.name)

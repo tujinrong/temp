@@ -1,0 +1,19 @@
+{
+  "source_sha256": "d4154974ef09a102eed06758d5be77453140f37f6dab3cf78e8bfd249e02981f",
+  "contract_sha256": "490310227005600f75181a80ec700094c392a1df9dd3aaca742d44b58c24f6ee",
+  "layout_review_sha256": "702bb655a08a3188d77289a6155476d22a3a95798f4a2770929825f94c0ed4bb",
+  "selected_loop": 3,
+  "checks": [
+    26,
+    37,
+    39
+  ],
+  "total_checks": 39,
+  "source_unchanged": true,
+  "test_methods_passed": 15,
+  "new_corruption_cases_rejected": 20,
+  "legacy_corruption_cases_rejected": 13,
+  "browser_checks_passed": 8,
+  "status": "ACCEPTANCE_CHECKS_PASS",
+  "final_sha256": "734ff6e7d23d33d1d3bd2e4ea4e00fb4da64b9132481ff6d7448c076085970d4"
+}

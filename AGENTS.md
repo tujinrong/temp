@@ -2,71 +2,102 @@
 
 ## Purpose
 
-This repository converts Excel workbooks, especially Japanese programming/system specification workbooks, into readable Markdown and evaluates the conversion for fidelity.
+This repository converts Excel workbooks—especially Japanese programming/system specifications—into AI-readable, human-style Markdown specifications.
 
-## Directory structure
+The Excel workbook is the source of truth, but its cell grid is not the target document structure.
 
-- `input/` — source `.xlsx` workbooks.
-- `output/` — final generated Markdown.
-- `reports/` — per-loop candidates and evaluation reports.
-- `src/` — converter, workbook reader, evaluator, and quality-loop programs.
+## Primary principle
 
-## Expected source style
+A good result should look like a specification an engineer intentionally wrote in Markdown. It should let an AI answer questions such as:
 
-Japanese program specifications often contain:
+- What does this function do?
+- What are the inputs, outputs, constraints, and validations?
+- What happens on success and failure?
+- Which messages and error conditions exist?
+- What security rules apply?
+- What is the processing flow?
+- Which UI fields, APIs, tables, and dependencies are involved?
 
-- a cover sheet such as `表紙` or `カバー`;
-- a repeated header on each sheet with `機能名`, `作成者`, `作成日`, `版数`, etc.;
-- many very narrow layout-grid columns, often width `2`;
-- merged cells spanning those narrow columns;
-- function/item lists;
-- screen/form design sheets;
+Do not optimize for reproducing Excel coordinates, merged cells, column widths, colors, or page layout.
+
+## Japanese Excel patterns
+
+Common source workbooks contain:
+
+- a cover sheet such as 表紙 or カバー;
+- repeated headers with 機能名, 作成者, 作成日, 版数, etc.;
+- many narrow layout columns, often width 2;
+- merged cells used for visual placement;
+- screen/form layouts;
+- function lists and field definitions;
 - processing-flow sheets;
-- detailed article-like specification sections and message/validation tables.
+- detailed specifications, validations, messages, interfaces, and security notes.
 
-The converter must treat narrow columns as a visual layout grid rather than blindly creating dozens of empty Markdown columns.
+Treat narrow columns and merged cells as layout hints for interpretation, not content that should normally appear in Markdown.
 
-## Conversion rules
+## Target Markdown rules
 
-1. Read source workbooks from `input/`.
-2. Never modify or delete the original workbook unless explicitly instructed.
-3. Preserve every non-empty worksheet and meaningful source value.
-4. Preserve formulas and important layout metadata at higher fidelity levels.
-5. Convert cover sheets to Markdown title/metadata sections.
-6. Extract repeated sheet headers separately so function name, author, date, version, and document type remain visible.
-7. Convert lists/definition tables to Markdown tables or lists.
-8. Convert processing flows to Mermaid when a reliable sequence can be inferred. State when branch direction is inferred.
-9. Convert screen/form layouts to HTML tables when merged cells/colspan are needed. Markdown tables may be used for simple field definitions.
-10. Convert detailed prose specifications to Markdown headings, paragraphs, lists, and tables rather than one giant grid.
-11. Escape Markdown pipe characters when necessary and preserve Unicode/Japanese text.
-12. Do not invent, summarize, translate, or reinterpret requirements unless explicitly requested.
+1. Produce one coherent Markdown specification from the workbook.
+2. Preserve source meaning and important values, but reorganize them semantically.
+3. Use one H1 document title.
+4. Convert the cover into document information and revision history.
+5. Convert repeated sheet headers into compact metadata.
+6. Prefer semantic sections such as Overview, Inputs/Outputs, UI Fields, Validation, Processing Flow, Business Rules, Interfaces, Error Handling, Messages, Security, and Data Changes.
+7. Use Markdown tables for compact domain data; split very wide tables by concept.
+8. Use Mermaid for flows when sequence and branches can be inferred reliably.
+9. HTML forms are allowed when useful. Do not recreate the Excel grid as a giant HTML table.
+10. State conditions and actions explicitly; do not rely on visual position to imply logic.
+11. Preserve IDs, codes, limits, dates, status values, and message text.
+12. Do not invent, translate, or silently reinterpret requirements.
+13. If a source fact cannot be placed naturally, preserve it under Additional source facts as a normal bullet.
+14. Keep traceability at sheet/section level. Cell coordinates are normally unnecessary.
 
-## Quality loop
+## Anti-patterns
 
-Use `python -m src.quality_loop <xlsx>` for normal work.
+The final Markdown should normally not contain:
 
-The quality loop may run up to **5 passes**. Each pass increases fidelity if the evaluator rejects the previous result.
+- Source grid sections;
+- rows keyed by A1, B17, and similar coordinates;
+- merged-range inventories such as merge=A1:D1;
+- col_width or data-grid-width metadata;
+- Excel layout-attribute lists;
+- giant HTML tables that imitate the worksheet;
+- duplicated raw source data added only to increase literal coverage.
 
-For every executed loop, report:
+## Quality evaluation
 
-- loop number and fidelity mode;
-- total score and PASS/RETRY status;
-- worksheet coverage;
-- source-cell coverage;
-- formula coverage;
-- structure score;
-- layout score;
-- detected problems;
-- changes recommended for the next loop.
+Run:
 
-Stop early if a pass meets the configured threshold. If all five fail, keep the fifth-pass output as best effort and clearly mark it for review.
+    python -m src.quality_loop input/spec.xlsx
+
+The evaluator scores:
+
+- source-sheet traceability;
+- meaningful content coverage;
+- document/function metadata;
+- specification structure;
+- explicit requirements and rules;
+- AI readability.
+
+Excel-shaped artifacts reduce the AI-readability score.
+
+Default pass gates:
+
+- total score: 88/100;
+- sheet traceability: 100%;
+- meaningful content coverage: 80%;
+- metadata: 80%;
+- specification structure: 75%;
+- requirement explicitness: 80%;
+- AI readability: 80%.
+
+The quality loop may run up to five semantic passes and stops as soon as a pass succeeds. Report every executed pass.
+
+## Reference files
+
+- docs/AI_MARKDOWN_SPEC_RULES.md — detailed normative rules.
+- examples/login_spec.sample.md — reference output.
 
 ## Completion
 
-A task is complete when:
-
-- the final Markdown exists in `output/`;
-- the evaluation history exists in `reports/`;
-- all non-empty worksheets are represented;
-- the evaluator has passed, or the fifth pass has been reported as review-required;
-- the final response summarizes every executed loop and the final result.
+A task is complete when the final Markdown reads like a standalone engineering specification, remains traceable to the workbook, passes the AI-readability evaluator (or reaches pass 5 and is marked review-required), and the evaluation history is written to reports/.

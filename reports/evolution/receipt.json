@@ -1,0 +1,48 @@
+{
+  "source": "input/japanese_program_spec_test.xlsx",
+  "source_sha256": "adee23e3448da6dc4013d7d7fbbe939d5aa79b34521876a01e3e2ce3d7952bd7",
+  "source_content_sha256": "086ef5ab657a7a7134005e9174225bf896609494d6758c83b58122a60ec6d0de",
+  "contract": "tests/fixtures/japanese_program_spec.contract.json",
+  "contract_sha256": "35fd918c0f0537c921f0b2af6b56b6d4195575d8da428c2388ea96ed2eff3cb7",
+  "selected_loop": 4,
+  "status": "ACCEPTANCE_CHECKS_PASS",
+  "source_unchanged": true,
+  "execution_environment": {
+    "python": "3.13.5",
+    "openpyxl": "3.1.5"
+  },
+  "loops": [
+    {
+      "loop": 1,
+      "candidate_sha256": "fa555f4f6c7306172bcba8b3c153669303b9bcc2436b6c5957a0e25704b0bbc0",
+      "legacy_score": 98.92,
+      "checks": "15/25",
+      "status": "RETRY"
+    },
+    {
+      "loop": 2,
+      "candidate_sha256": "f98fc5810e66ba9f860101e7008812ad72df88ebb8010b69fc13832340fc19a0",
+      "legacy_score": 98.74,
+      "checks": "19/25",
+      "status": "RETRY"
+    },
+    {
+      "loop": 3,
+      "candidate_sha256": "8d0f4c6a6eead2bfdedab6e64072a2260819682a178303c04c30e20fdf2cec49",
+      "legacy_score": 98.74,
+      "checks": "21/25",
+      "status": "RETRY"
+    },
+    {
+      "loop": 4,
+      "candidate_sha256": "48f21e2daf88e26bc594004af9017223654965cbb9dfb503f31b01f6fbeca794",
+      "legacy_score": 98.74,
+      "checks": "25/25",
+      "status": "ACCEPTANCE_CHECKS_PASS"
+    }
+  ],
+  "tests": {
+    "test_methods_passed": 6,
+    "deliberate_corruptions_rejected": 13
+  }
+}

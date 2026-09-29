@@ -1,59 +1,64 @@
-# XLSX specification → Markdown
+# XLSX specification → AI-readable Markdown
 
-General-purpose converter aimed at Japanese Excel-based program/system specifications.
+General-purpose converter for Excel-based programming/system specifications, with special handling for common Japanese specification styles.
 
-## What it handles
+## Goal
 
-- cover sheets (`表紙`, `カバー`, etc.)
-- repeated per-sheet headers such as `機能名`, `作成者`, `作成日`, version information
-- very narrow grid columns (for example width `2`) without exploding them into unreadable Markdown columns
-- merged cells
-- normal lists and definition tables
-- processing-flow sheets rendered as Mermaid when possible
-- screen/form specifications rendered with HTML tables when merged-grid layout matters
-- formulas, charts/images counts, and source-cell audit information at higher fidelity levels
+The target is not an Excel transcription. The target is a Markdown specification that a human engineer could have written directly and that an AI can analyze reliably.
+
+The converter interprets workbook layout, then rewrites the information into semantic sections, compact tables, lists, Mermaid flows, and optional HTML form mockups.
+
+## Source styles handled
+
+- cover sheets such as 表紙 and カバー
+- per-sheet headers such as 機能名, 作成者, 作成日, 版数
+- width-2 layout grids and merged cells
+- function/item lists
+- screen and form specifications
+- processing flows
+- detailed/article-style specifications
+- messages, validations, security notes, and formulas/data values
 
 ## Install
 
-```bash
-python -m pip install -r requirements.txt
-```
+    python -m pip install -r requirements.txt
 
 ## Convert once
 
-```bash
-python -m src.xlsx_to_markdown input/spec.xlsx -o output/spec.md --fidelity 1
-```
+    python -m src.xlsx_to_markdown input/spec.xlsx -o output/spec.md --fidelity 1
 
-`--fidelity` is from 1 to 5. Higher levels append progressively more source/audit information.
+The fidelity option remains 1–5 for compatibility, but the levels now represent semantic recovery strategies, not increasingly literal Excel dumps.
 
 ## Convert + evaluate + retry
 
-```bash
-python -m src.quality_loop input/spec.xlsx
-```
+    python -m src.quality_loop input/spec.xlsx
 
-The loop evaluates every result and retries with a higher-fidelity conversion when needed, up to five passes.
+The process stops as soon as the Markdown passes. If it does not pass, it can retry up to five strategies:
 
-Outputs:
+1. semantic-baseline
+2. analysis-index
+3. requirements-explicit
+4. traceability-enhanced
+5. semantic-recovery
 
-- `output/spec.md` — final conversion
-- `reports/spec.pass1.md` ... `pass5.md` — candidate Markdown from each executed loop
-- `reports/spec.pass1.json` ... — machine-readable evaluation for each loop
-- `reports/spec.evaluation.md` — human-readable report for every loop and final result
-- `reports/spec.evaluation.json` — full machine-readable history
+Outputs include the final Markdown, each executed pass, machine-readable JSON evaluations, and a human-readable report.
 
-The evaluator measures worksheet coverage, source-cell coverage, formula coverage, semantic structure, and layout preservation.
+## Evaluation philosophy
 
-## Included Japanese-style test
+The evaluator rewards semantic specification structure, explicit rules, meaningful source coverage, metadata, Mermaid flows, compact domain tables, readable forms, and sheet-level traceability.
 
-`tests/make_japanese_spec_test.py` creates the primary regression workbook at `input/japanese_program_spec_test.xlsx`. It includes a cover, repeated per-sheet headers, width-2 grid columns, merged screen layout, function list, process flow, article-style detailed specification, messages, and a formula.
+It penalizes Source grid dumps, cell-coordinate tables, merged-cell/column-width metadata, HTML that recreates an Excel grid, and very wide hard-to-chunk tables.
 
-Example:
+A file can therefore have 100% literal Excel-cell coverage and still fail if it is poor for AI understanding.
 
-```bash
-python tests/make_japanese_spec_test.py
-python -m src.quality_loop input/japanese_program_spec_test.xlsx
-```
+## Style guide and sample
 
-A successful regression currently requires four passes: semantic conversion first, then progressively higher fidelity until formulas and layout metadata are fully preserved.
+- docs/AI_MARKDOWN_SPEC_RULES.md — normative conversion/evaluation rules.
+- examples/login_spec.sample.md — reference output for a Japanese login specification.
+
+## Regression fixture
+
+    python tests/make_japanese_spec_test.py
+    python -m src.quality_loop input/japanese_program_spec_test.xlsx
+
+The fixture includes a cover, repeated sheet metadata, width-2 layout grids, screen definition, flow, detailed rules, messages, and a formula.

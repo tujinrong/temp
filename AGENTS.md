@@ -32,11 +32,25 @@ Preserve the exact relative directories and filename stem in all three destinati
 
 Do not convert legend sections (凡例) or revision/change histories (変更履歴・改訂履歴). Cover metadata such as current version, author and date remains in scope. Excluded content is not a coverage failure.
 
+## Chapter order: Excel sheet order (mandatory)
+
+1. Read the saved workbook tab sequence. Apply sheet exclusions, then preserve the relative order of the remaining sheets. Never sort by sheet name, sheetId, worksheet filename or business topic.
+2. Use one H1 document title and one H2 chapter for each eligible source sheet, including the cover. Format H2 as `## 1. <sheet name>`, with consecutive numbers after exclusions. Do not create empty chapters for excluded sheets.
+3. Keep source sheet names as chapter names. Trim trailing layout-only spaces only for display; keep exact original names as source-mapping keys. Record any display normalization in `report`.
+4. Each chapter contains content from that sheet. Use H3/H4, prose, lists, domain tables, Mermaid and HTML within the chapter. Do not combine separate sheets under new topic-based chapters, such as merging DFD and event descriptions.
+5. Keep figures, forms and callouts with their source sheet. Cross-sheet relationships use links rather than moving or duplicating substantive content. Consolidate identical header metadata only without losing its source or overrides.
+6. Questions and unresolved review records still belong in `qa`. Keep the corresponding chapter in `output` with a short link to the QA section, and retain any already-confirmed specification summary with its attribution. Never fill a QA-only chapter with invented requirements.
+7. Group QA entries by their primary source sheet in the same tab order; use the corresponding output chapter number and omit groups without questions. Preserve existing QA IDs, options, answers and status even when their display order changes. A cross-sheet question appears once, with all relevant sources listed.
+8. In `report`, list source-to-chapter mappings in the same sheet order, including the source tab position and output chapter number. General results and the reading guide remain report content, not output chapters.
+9. Validate the exact eligible-sheet/H2 sequence, chapter coverage, source ownership of content and all internal/QA links before accepting a candidate. A high legacy heuristic score does not waive this gate.
+
+See `docs/SHEET_ORDER.md`. `src/sheet_order.py` assembles already-reviewed sheet fragments and checks chapter order; it is not a cell/image extraction engine.
+
 ## Human-view interpretation
 
 - Inspect visible sheet layout, merged headings, reading order, tables, screenshots, connectors and callout targets.
 - Many Japanese specifications use width-2 columns as a visual grid. Convert their relationships to headings, prose and compact domain tables, not dozens of empty columns or coordinate-keyed rows.
-- Reorganize visible source sections into a coherent engineering specification. Consolidate repeated metadata without losing visible overrides.
+- Organize content semantically within each sheet chapter while keeping the Excel sheet order. Consolidate repeated metadata without losing visible overrides. Do not reorganize the overall document by business topic.
 - Preserve identifiers, values, conditions, negation, units, required/optional distinctions, messages and record/field associations.
 - Empty cells do not automatically mean a specified empty-string default or an optional field.
 - Distinguish current requirements, illustrative examples, source comments and uncertain interpretations. Never promote a question into a confirmed requirement.
@@ -64,4 +78,4 @@ When quality is insufficient, repair actual omissions or misinterpretations and 
 
 Save the actual specification, QA and result report to the required paths on `main`, then read them back to verify existence and content. Report the commit and exact paths. A local attachment, a status-only report or an empty directory is not completion of GitHub output delivery. Distinguish completed conversion from partial conversion, failed retrieval and unexecuted evaluation.
 
-Existing guides/examples are references only; this file and the user's latest explicit scope rules take precedence over older examples and legacy evaluators.
+Existing guides/examples are references only; this file and the user's latest explicit scope rules take precedence over older examples and legacy evaluators. In particular, older topic-based chapter structures are superseded by the mandatory Excel sheet order.

@@ -1,7 +1,8 @@
 """Assemble reviewed Markdown fragments in visible Excel tab order.
 
-This module determines order only. Callers must supply already reviewed,
-visible-only fragments; it does not interpret cells, pictures or callouts.
+A leading cover is titled はじめに and may contain reviewed common material.
+This module determines order only; callers supply visible-only fragments.
+It does not interpret cells, pictures or callouts, or infer common rules.
 """
 from __future__ import annotations
 
@@ -16,6 +17,7 @@ from zipfile import ZipFile
 
 NS = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
 EXCLUDED_NAMES = frozenset({'凡例', '変更履歴', '改訂履歴', 'legend', 'change history', 'revision history'})
+COVER_NAMES = frozenset({'表紙', 'カバー', 'cover', 'cover sheet', 'front', 'front page'})
 
 
 @dataclass(frozen=True)
@@ -26,8 +28,12 @@ class Chapter:
     source_name: str
 
     @property
+    def is_introduction(self) -> bool:
+        return self.number == 1 and self.source_name.strip().casefold() in COVER_NAMES
+
+    @property
     def label(self) -> str:
-        return self.source_name.strip()
+        return 'はじめに' if self.is_introduction else self.source_name.strip()
 
     @property
     def anchor(self) -> str:
@@ -85,7 +91,12 @@ def markdown_headings(text: str) -> list[tuple[int, str]]:
 
 
 def assemble(title: str, chapters: list[Chapter], sections: Mapping[str, str]) -> str:
-    """Assemble one H2 per eligible sheet; exact original names are mapping keys."""
+    """Assemble one H2 per eligible sheet, naming the leading cover はじめに.
+
+    Exact source names remain keys. The cover fragment may contain explicitly
+    reviewed common metadata/rules; callers retain source mappings in report
+    and keep conflicting or sheet-specific content at its original location.
+    """
     expected = {c.source_name for c in chapters}
     if set(sections) != expected:
         raise ValueError('Missing, extra or excluded sheet fragments; check source mapping.')

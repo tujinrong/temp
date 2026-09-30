@@ -4,7 +4,7 @@ import unittest
 from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 
-from src.sheet_order import NS, assemble, markdown_headings, validate_order, workbook_chapters
+from src.sheet_order import Chapter, NS, assemble, markdown_headings, validate_order, workbook_chapters
 
 
 class SheetOrderTests(unittest.TestCase):
@@ -13,7 +13,7 @@ class SheetOrderTests(unittest.TestCase):
         self.path = Path(self.tmp.name) / 'metadata-fixture.xlsx'
         root = ET.Element(NS+'workbook')
         sheets = ET.SubElement(root, NS+'sheets')
-        # Small workbook-metadata fixture, not a full user-facing XLSX.
+        # Metadata-only parser fixture; not a user-facing Excel workbook.
         for name, sid, state in [('後ろの名前', '80', 'visible'), ('非表示テスト', '2', 'hidden'), ('変更履歴', '3', 'visible'), ('先の名前 ', '10', 'visible'), ('秘密テスト', '4', 'veryHidden'), ('凡例', '8', 'visible')]:
             ET.SubElement(sheets, NS+'sheet', {'name':name, 'sheetId':sid, 'state':state})
         with ZipFile(self.path, 'w') as z:
@@ -67,6 +67,39 @@ class SheetOrderTests(unittest.TestCase):
 
     def test_comment_only_headings_not_counted(self):
         self.assertEqual(markdown_headings('<!--\n## 偽の章\n-->\n# 本文'), [(1,'本文')])
+
+    def test_leading_cover_is_introduction_with_stable_source_key_and_anchor(self):
+        cover=Chapter(1,1,'21','表紙 ')
+        body=Chapter(2,3,'5','処理概要')
+        text=assemble('文書',[cover,body],{'表紙 ':'共通情報','処理概要':'固有の目的'})
+        self.assertEqual(cover.label,'はじめに')
+        self.assertEqual(cover.source_name,'表紙 ')
+        self.assertEqual(cover.anchor,'sheet-21')
+        self.assertEqual(markdown_headings(text),[(1,'文書'),(2,'1. はじめに'),(2,'2. 処理概要')])
+        self.assertTrue(validate_order(text,[cover,body]))
+
+    def test_old_cover_heading_is_rejected(self):
+        c=Chapter(1,1,'21','表紙')
+        text=assemble('文書',[c],{'表紙':'本文'})
+        self.assertFalse(validate_order(text.replace('1. はじめに','1. 表紙'),[c]))
+
+    def test_display_label_is_not_a_source_key(self):
+        with self.assertRaises(ValueError):
+            assemble('文書',[Chapter(1,1,'21','表紙')],{'はじめに':'本文'})
+
+    def test_does_not_invent_or_move_a_cover(self):
+        self.assertEqual(Chapter(1,1,'8','概要').label,'概要')
+        self.assertEqual(Chapter(2,2,'21','表紙').label,'表紙')
+        self.assertEqual(Chapter(1,1,'8','Cover').label,'はじめに')
+
+    def test_reviewed_common_fragment_and_local_override_are_preserved(self):
+        chapters=[Chapter(1,1,'21','表紙'),Chapter(2,2,'5','概要')]
+        sections={'表紙':'### 共通情報\n\n<a id="common"></a>\n共通値A','概要':'共通情報は[冒頭](#common)。このシートだけ値B。'}
+        text=assemble('文書',chapters,sections)
+        self.assertEqual(text.count('共通値A'),1)
+        self.assertIn('このシートだけ値B。',text)
+        self.assertIn('[冒頭](#common)',text)
+        self.assertTrue(validate_order(text,chapters))
 
 
 if __name__ == '__main__':

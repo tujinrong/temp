@@ -8,7 +8,12 @@ from pathlib import Path
 import re
 import unicodedata
 
-from openpyxl import load_workbook
+from openpyxl import load_workbook as _raw_load_workbook
+from functools import partial
+from .visible_scope import load_visible_workbook
+
+# All semantic extraction and evaluation starts from the same visible-only view.
+load_workbook = partial(load_visible_workbook, loader=_raw_load_workbook)
 
 META_KEYS = {
     '文書名','システム名','機能id','機能名','機能名称','画面名','画面名称','処理名','api名',

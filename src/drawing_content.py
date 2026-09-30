@@ -13,6 +13,7 @@ import struct
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
+from .visible_scope import WorkbookScope, truth
 
 M='http://schemas.openxmlformats.org/spreadsheetml/2006/main'
 R='http://schemas.openxmlformats.org/officeDocument/2006/relationships'
@@ -57,9 +58,14 @@ def extract(path: str | Path, asset_dir: str | Path | None=None) -> dict:
     with zipfile.ZipFile(path) as z:
         if len(z.infolist())>10000 or sum(i.file_size for i in z.infolist())>150_000_000:
             raise ValueError('Workbook exceeds inspection safety limits.')
+        scope=WorkbookScope.from_zip(z)
         rels=relationships(z,'xl/workbook.xml')
         for s in xml(z,'xl/workbook.xml').findall('m:sheets/m:sheet',NS):
-            sheet=s.get('name'); part=rels[s.get('{'+R+'}id')]['part']
+            sheet=s.get('name')
+            sheet_scope=scope.sheets[sheet]
+            if not sheet_scope.included:
+                continue
+            part=rels[s.get('{'+R+'}id')]['part']
             sr=relationships(z,part)
             for dr in xml(z,part).findall('m:drawing',NS):
                 key=dr.get('{'+R+'}id')
@@ -67,12 +73,27 @@ def extract(path: str | Path, asset_dir: str | Path | None=None) -> dict:
                     result['warnings'].append(f'{sheet}: unresolved/external drawing');continue
                 drawing=sr[key]['part']; drels=relationships(z,drawing)
                 for anchor in xml(z,drawing):
+                    anchor_state=sheet_scope.anchor_state(anchor)
+                    if anchor_state=='excluded':
+                        continue
+                    if anchor_state=='review':
+                        result['warnings'].append(f'{sheet}: drawing visibility requires visual review')
+                    # A hidden parent group suppresses its descendants.
+                    for group in list(anchor.findall('.//xdr:grpSp',NS)):
+                        prop=group.find('xdr:nvGrpSpPr/xdr:cNvPr',NS)
+                        if prop is not None and truth(prop.get('hidden')):
+                            for parent in anchor.iter():
+                                if group in list(parent):
+                                    parent.remove(group)
+                                    break
                     origin=anchor.find('xdr:from',NS)
                     position={}
                     if origin is not None:
                         position={ET.QName(c.tag).text.split('}')[-1]:int(c.text or 0) for c in origin}
                     for sp in anchor.findall('.//xdr:sp',NS):
                         prop=sp.find('xdr:nvSpPr/xdr:cNvPr',NS)
+                        if prop is not None and truth(prop.get('hidden')):
+                            continue
                         geom=sp.find('xdr:spPr/a:prstGeom',NS)
                         paragraphs=[''.join(t.text or '' for t in p.findall('.//a:t',NS))
                                     for p in sp.findall('xdr:txBody/a:p',NS)]
@@ -87,6 +108,9 @@ def extract(path: str | Path, asset_dir: str | Path | None=None) -> dict:
                               'note':note if target and sep else text,'anchor':position}
                         result['callouts' if 'callout' in kind.lower() else 'notes'].append(item)
                     for pic in anchor.findall('.//xdr:pic',NS):
+                        prop=pic.find('xdr:nvPicPr/xdr:cNvPr',NS)
+                        if prop is not None and truth(prop.get('hidden')):
+                            continue
                         blip=pic.find('.//a:blip',NS)
                         key=blip.get('{'+R+'}embed') if blip is not None else None
                         if key not in drels:
@@ -107,6 +131,8 @@ def extract(path: str | Path, asset_dir: str | Path | None=None) -> dict:
                 if rel['type'].endswith('/comments'):
                     rt=xml(z,rel['part'])
                     for comment in rt.findall('m:commentList/m:comment',NS):
+                        if not sheet_scope.cell_visible(comment.get('ref','')):
+                            continue
                         text=''.join(t.text or '' for t in comment.findall('.//m:t',NS))
                         result['notes'].append({'sheet':sheet,'part':rel['part'],
                             'cell':comment.get('ref'),'text':text,'target':None,'kind':'cell-comment'})

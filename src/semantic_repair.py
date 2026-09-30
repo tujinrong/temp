@@ -26,6 +26,9 @@ def text_cell(cell: CellInfo, sheet: SheetInfo, revision: int) -> str:
     match = re.fullmatch(r"=COUNTA\(([A-Z]+\d+):([A-Z]+\d+)\)", cell.formula, re.I)
     if match:
         a, b, c, d = old.range_boundaries(":".join(match.groups()))
+        if (any(b <= row <= d for row in sheet.hidden_rows)
+                or any(a <= col <= c for col in sheet.hidden_cols)):
+            return "計算結果は未確定（保存済み値なし・非表示領域の参照は再計算しない）"
         selected = [v for v in sheet.cells if a <= v.col <= c and b <= v.row <= d]
         if not any(v.formula for v in selected):
             count = sum(v.value is not None for v in selected)

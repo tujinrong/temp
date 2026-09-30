@@ -6,7 +6,12 @@ from pathlib import Path
 import re
 from typing import Any, Iterable
 
-from openpyxl import load_workbook
+from openpyxl import load_workbook as _raw_load_workbook
+from functools import partial
+from .visible_scope import load_visible_workbook, WorkbookScope
+
+# All semantic extraction and evaluation starts from the same visible-only view.
+load_workbook = partial(load_visible_workbook, loader=_raw_load_workbook)
 from openpyxl.cell.cell import Cell
 from openpyxl.styles import PatternFill
 from openpyxl.utils import get_column_letter
@@ -167,6 +172,7 @@ def load_xlsx(path: str | Path) -> WorkbookInfo:
     except Exception:
         wb_values = None
 
+    scope = WorkbookScope.from_xlsx(path)
     sheets: list[SheetInfo] = []
     for idx, ws in enumerate(wb_formula.worksheets):
         vws = wb_values[ws.title] if wb_values and ws.title in wb_values.sheetnames else None
@@ -202,9 +208,9 @@ def load_xlsx(path: str | Path) -> WorkbookInfo:
             widths[col] = float(dim.width if dim.width is not None else 13.0)
         hidden_cols = {
             col for col in range(1, ws.max_column + 1)
-            if ws.column_dimensions[get_column_letter(col)].hidden
+            if not scope.sheets[ws.title].column_visible(col)
         }
-        hidden_rows = {row for row in range(1, ws.max_row + 1) if ws.row_dimensions[row].hidden}
+        hidden_rows = {row for row in range(1, ws.max_row + 1) if not scope.sheets[ws.title].row_visible(row)}
         info = SheetInfo(
             name=ws.title,
             max_row=ws.max_row,
@@ -248,6 +254,8 @@ def effective_columns(sheet: SheetInfo, narrow_threshold: float = 3.0) -> list[i
         merged_cols.update(range(a, b + 1))
     result = []
     for col in range(1, sheet.max_col + 1):
+        if col in sheet.hidden_cols:
+            continue
         width = sheet.column_widths.get(col, 13.0)
         if col in used_cols:
             result.append(col)

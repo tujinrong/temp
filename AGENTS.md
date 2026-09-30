@@ -2,102 +2,66 @@
 
 ## Purpose
 
-This repository converts Excel workbooks—especially Japanese programming/system specifications—into AI-readable, human-style Markdown specifications.
+Convert Excel programming/system specifications into human-style, AI-readable Markdown. Interpret the document a person can see; do not reproduce the Excel cell grid. The source workbook is read-only unless the user explicitly requests editing it.
 
-The Excel workbook is the source of truth, but its cell grid is not the target document structure.
+## Repository and output paths
 
-## Primary principle
+Operate directly on `main` in `tujinrong/temp`. Do not create or use work branches.
 
-A good result should look like a specification an engineer intentionally wrote in Markdown. It should let an AI answer questions such as:
+For an input `input/<relative-directory>/<name>.xlsx`, create these UTF-8 (without BOM) Markdown files:
 
-- What does this function do?
-- What are the inputs, outputs, constraints, and validations?
-- What happens on success and failure?
-- Which messages and error conditions exist?
-- What security rules apply?
-- What is the processing flow?
-- Which UI fields, APIs, tables, and dependencies are involved?
+- `output/<relative-directory>/<name>.md`: specification content only.
+- `qa/<relative-directory>/<name>.md`: questions, inconsistencies, unresolved matters and requests for missing referenced material.
+- `report/<relative-directory>/<name>.md`: conversion results, scope and reading guide, source mapping, exclusions, verification and limitations.
 
-Do not optimize for reproducing Excel coordinates, merged cells, column widths, colors, or page layout.
+Preserve the exact relative directories and filename stem in all three destinations. Use singular `report`, not `reports`, for new production conversions. An input directly under `input` produces files directly under the three output roots.
 
-## Japanese Excel patterns
+## Visible-only scope (mandatory)
 
-Common source workbooks contain:
+1. Exclude sheets whose saved state is `hidden` or `veryHidden`.
+2. Exclude rows and columns hidden in the saved workbook, including grouped column ranges, collapsed groups and filter-hidden rows. Inspect the actual hidden state; `outlineLevel` alone does not mean hidden.
+3. Exclude zero-height rows and zero-width columns. Do not treat scrolling, frozen panes, the current viewport or print area alone as hidden content.
+4. Apply exclusions before extracting requirements, tables, questions, comments, formulas, source maps or evaluation expectations. Hidden content must not reappear through appendices, fallback extraction, QA generation or coverage-repair loops.
+5. Do not unhide the workbook. Do not use hidden cells to fill missing visible requirements.
+6. A visible formula's saved displayed result may be retained, even if its formula references hidden data. Do not expand hidden dependencies or recalculate external workbooks. Unavailable displayed results are reported as limitations, not fabricated.
+7. For merged regions, keep only text actually visible in the saved view. An anchor in a hidden row/column is not automatically permission to copy its text to a visible cell. Ambiguous partial visibility requires visual review.
+8. Exclude hidden drawing objects and objects fully suppressed by hidden sheet/row/column layout. For floating or partially overlapping objects, inspect their visible area and anchoring behavior rather than relying only on the top-left anchor. Do not silently discard a visibly floating object.
+9. Report exclusion counts/reasons when useful, but do not transcribe hidden contents or generate questions about deliberately excluded data.
 
-- a cover sheet such as 表紙 or カバー;
-- repeated headers with 機能名, 作成者, 作成日, 版数, etc.;
-- many narrow layout columns, often width 2;
-- merged cells used for visual placement;
-- screen/form layouts;
-- function lists and field definitions;
-- processing-flow sheets;
-- detailed specifications, validations, messages, interfaces, and security notes.
+## Other exclusions
 
-Treat narrow columns and merged cells as layout hints for interpretation, not content that should normally appear in Markdown.
+Do not convert legend sections (凡例) or revision/change histories (変更履歴・改訂履歴). Cover metadata such as current version, author and date remains in scope. Excluded content is not a coverage failure.
 
-## Target Markdown rules
+## Human-view interpretation
 
-1. Produce one coherent Markdown specification from the workbook.
-2. Preserve source meaning and important values, but reorganize them semantically.
-3. Use one H1 document title.
-4. Convert the cover into document information and revision history.
-5. Convert repeated sheet headers into compact metadata.
-6. Prefer semantic sections such as Overview, Inputs/Outputs, UI Fields, Validation, Processing Flow, Business Rules, Interfaces, Error Handling, Messages, Security, and Data Changes.
-7. Use Markdown tables for compact domain data; split very wide tables by concept.
-8. Use Mermaid for flows when sequence and branches can be inferred reliably.
-9. HTML forms are allowed when useful. Do not recreate the Excel grid as a giant HTML table.
-10. State conditions and actions explicitly; do not rely on visual position to imply logic.
-11. Preserve IDs, codes, limits, dates, status values, and message text.
-12. Do not invent, translate, or silently reinterpret requirements.
-13. If a source fact cannot be placed naturally, preserve it under Additional source facts as a normal bullet.
-14. Keep traceability at sheet/section level. Cell coordinates are normally unnecessary.
+- Inspect visible sheet layout, merged headings, reading order, tables, screenshots, connectors and callout targets.
+- Many Japanese specifications use width-2 columns as a visual grid. Convert their relationships to headings, prose and compact domain tables, not dozens of empty columns or coordinate-keyed rows.
+- Reorganize visible source sections into a coherent engineering specification. Consolidate repeated metadata without losing visible overrides.
+- Preserve identifiers, values, conditions, negation, units, required/optional distinctions, messages and record/field associations.
+- Empty cells do not automatically mean a specified empty-string default or an optional field.
+- Distinguish current requirements, illustrative examples, source comments and uncertain interpretations. Never promote a question into a confirmed requirement.
+- Do not infer logic from color or left/right placement alone. Keep unresolved matters in QA; the output may contain a short QA-ID cross-reference rather than the whole question.
 
-## Anti-patterns
+## Forms, flows and callouts
 
-The final Markdown should normally not contain:
+Use semantic HTML inside the `.md` for form/screen layout when present. Labels, controls, groups and associated notes should reflect visible source content; do not reconstruct the worksheet grid. HTML is a static specification mockup, not an implemented application, and must not invent live endpoints or behavior.
 
-- Source grid sections;
-- rows keyed by A1, B17, and similar coordinates;
-- merged-range inventories such as merge=A1:D1;
-- col_width or data-grid-width metadata;
-- Excel layout-attribute lists;
-- giant HTML tables that imitate the worksheet;
-- duplicated raw source data added only to increase literal coverage.
+Use Mermaid for verified processing relationships. Preserve branch conditions and distinguish inferred connections. Unsupported images/shapes must be reported, not silently omitted or marked fully converted.
 
-## Quality evaluation
+Convert visible callouts (吹き出し) to target-associated comments and readable notes. Specification notes stay in `output`; questions and unresolved callouts go to `qa`. Preserve original wording where needed and keep a visible copy so HTML-comment stripping does not remove requirements.
 
-Run:
+## Questions
 
-    python -m src.quality_loop input/spec.xlsx
+Prefer selection-based questions with stable QA IDs, source section, brief context, a single clear question and an unselected answer field. Include `その他` and `未定・要調査` where appropriate. State whether one or multiple choices are allowed. Split compound questions. Do not invent source facts or preselect answers.
 
-The evaluator scores:
+## Evaluation and repair
 
-- source-sheet traceability;
-- meaningful content coverage;
-- document/function metadata;
-- specification structure;
-- explicit requirements and rules;
-- AI readability.
+Evaluate only the in-scope visible content. Test semantic associations and critical constraints, not only substring presence. A high heuristic score is not proof of AI understanding.
 
-Excel-shaped artifacts reduce the AI-readability score.
-
-Default pass gates:
-
-- total score: 88/100;
-- sheet traceability: 100%;
-- meaningful content coverage: 80%;
-- metadata: 80%;
-- specification structure: 75%;
-- requirement explicitness: 80%;
-- AI readability: 80%.
-
-The quality loop may run up to five semantic passes and stops as soon as a pass succeeds. Report every executed pass.
-
-## Reference files
-
-- docs/AI_MARKDOWN_SPEC_RULES.md — detailed normative rules.
-- examples/login_spec.sample.md — reference output.
+When quality is insufficient, repair actual omissions or misinterpretations and re-evaluate, up to five executed passes. Record each candidate's findings, changes and outcome in `report`; do not invent iterations or scores. Stop when the relevant checks pass. An unverified figure or unmet requirement remains review-required regardless of total score. Never recover excluded content to improve a score.
 
 ## Completion
 
-A task is complete when the final Markdown reads like a standalone engineering specification, remains traceable to the workbook, passes the AI-readability evaluator (or reaches pass 5 and is marked review-required), and the evaluation history is written to reports/.
+Save the actual specification, QA and result report to the required paths on `main`, then read them back to verify existence and content. Report the commit and exact paths. A local attachment, a status-only report or an empty directory is not completion of GitHub output delivery. Distinguish completed conversion from partial conversion, failed retrieval and unexecuted evaluation.
+
+Existing guides/examples are references only; this file and the user's latest explicit scope rules take precedence over older examples and legacy evaluators.

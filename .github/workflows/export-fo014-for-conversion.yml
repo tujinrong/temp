@@ -1,0 +1,42 @@
+name: Export FO-014 for conversion
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/export-fo014-for-conversion.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    if: github.repository == 'tujinrong/temp'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read the requested source workbook
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /input/FO-014_詳細設計書_支払案内書.xlsx
+      - name: Verify the source bytes
+        shell: python
+        run: |
+          from pathlib import Path
+          import hashlib, zipfile
+          source = Path('input/FO-014_詳細設計書_支払案内書.xlsx')
+          data = source.read_bytes()
+          digest = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+          assert len(data) == 1272649, 'Source size changed; review the new input.'
+          assert digest == '98f8ab0bb3cfb31ae77005a682518c2cc3cb0c9d', 'Source changed; review the new input.'
+          with zipfile.ZipFile(source) as archive:
+              assert archive.testzip() is None, 'Workbook archive is corrupt.'
+          print('Verified source:', len(data), digest)
+      - name: Package only the requested workbook
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: fo014-source-for-conversion
+          path: input/FO-014_詳細設計書_支払案内書.xlsx
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0

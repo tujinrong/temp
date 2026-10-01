@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "storage": "files",
+  "stage": "audit-01",
+  "status": "CHECKPOINT_ONLY",
+  "input": "input/FO-014_詳細設計書_支払案内書.xlsx",
+  "dependencies": {
+    "input": "8cfb0e50272542dc6270dd318d911b279661175a6b9433f7535930a3eb383d55",
+    "rules_git_blob": "1a201ae35a411952088cd960cc1cd61527218055",
+    "tools/build_fo014.py": "7286682b4c2534f91012e98d11d9fa206f900398b8baf1e69d9fec81eab88513",
+    "tools/review_fo014.py": "e3b2b41eeb37d1c6db6a6c1262d6821ad440669de5532d5609950a271b81c321",
+    "tools/build_qa.py": "cb2de51746e5649df1eff26a5fb5fa1a984871b5a3899fc0bc153ceeb8b27f7e",
+    "src/mermaid_validate.py": "9001d64fc60e9972f01bc9d22270ca02725f22793996e1904103c6b22ba9991f",
+    "src/independent_evaluate.py": "ef62fb886b5c43a87b26df6348fe1e776e30488dd62f8c237106fb9953e91eaf"
+  },
+  "artifacts": {
+    "chapters-01-03.md": {"sha256": "7fea8da429df65403a2271f6418c06ab19ed793de86019d19a468d3fa984c03a", "bytes": 4372}
+  },
+  "scope": {"total_sheets": 19, "excluded_hidden": 2, "excluded_revision": 1, "eligible_sheets": 16},
+  "next_action": "Continue from reviewed chapters 1-3. The remaining candidate is local only. Fix HTML blank-line rendering in report amount tables, then save complete candidates and run independent content, browser and Mermaid checks.",
+  "cleanup": "Allowed only after all final files are saved on main and re-read with matching hashes. Git history is retained."
+}

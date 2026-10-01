@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "stage": "source-acquired-and-visible-scope-extracted",
+  "source": "user attachment 02.Design.zip",
+  "source_root": "input/doc/00_Source/02.Design/20.設計",
+  "source_commit": "d9e08003b36bccc43aa46f5277d80455eb7b326f",
+  "verified_workbooks": 91,
+  "verified_bytes": 10117992,
+  "inventory_match": "ALL_91_SIZE_AND_GIT_BLOB_HASHES_MATCH",
+  "zip_crc": "PASS",
+  "visible_sheet_candidates_after_sheet_exclusions": 275,
+  "visible_nonempty_cells_before_template_and_legend_filtering": 72554,
+  "source_models": "extracted locally; not yet published as converted specifications",
+  "existing_rules_and_python": "READ_ONLY",
+  "temporary_work_root": "/mnt/data/design_batch/tmp",
+  "final_outputs_published": 0,
+  "next_action": "Convert 82 data-definition workbooks and 9 screen/report/batch/interface workbooks; validate source associations, HTML rendering, Mermaid and paths before publishing. Do not substitute the earlier detailed FO-006/007/014 editions for these different source hashes.",
+  "cleanup": "Retain checkpoints until all final output/qa/report files have been read back and verified."
+}

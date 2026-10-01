@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "kind": "source_inventory_not_conversion_result",
+  "repository": "tujinrong/temp",
+  "branch": "main",
+  "source_commit": "d9e08003b36bccc43aa46f5277d80455eb7b326f",
+  "source_root": "input/doc/00_Source/02.Design/20.設計",
+  "source_tree": "ca9ea88cdb740cf95cbbe50db4e61e3f21835f8c",
+  "rules_git_blob": "1a201ae35a411952088cd960cc1cd61527218055",
+  "existing_rules_and_py": "READ_ONLY",
+  "file_count": 91,
+  "extensions": {
+    ".xlsx": 90,
+    ".xlsm": 1
+  },
+  "source_bytes": 10117992,
+  "inventory_file": "inventory-compact.json",
+  "inventory_sha256": "f9085fca4bb3cdb36031e56b21b0cca7387e36a85a6d449aa88c7d65bc9eea3b",
+  "status": "BLOCKED_SOURCE_ACQUISITION",
+  "converted_files": 0,
+  "evaluated_files": 0,
+  "blockers": [
+    "Direct download in the processing container failed with Temporary failure in name resolution.",
+    "A temporary export workflow creation was blocked by a safety check; it was not created, retried through another write route, or executed.",
+    "No complete source workbook in this selected subtree has been copied and verified in the processing container."
+  ],
+  "next_action": "Provide the bytes of this selected subtree, e.g. an attached ZIP. Match each original file with inventory-compact.json before extraction. Do not substitute the previously attached FO-006/007/014 detailed editions for the different design editions here.",
+  "output_mapping": {
+    "input_prefix": "input/",
+    "roots": [
+      "output/",
+      "qa/",
+      "report/"
+    ],
+    "extension": ".md",
+    "encoding": "UTF-8 without BOM",
+    "line_ending": "LF"
+  },
+  "cleanup_policy": "Retain this inventory until final delivery has been re-read and verified on main. Do not delete source Excel or final outputs.",
+  "inventory_format": "groups: relative directory -> [filename, bytes, Git blob SHA]"
+}

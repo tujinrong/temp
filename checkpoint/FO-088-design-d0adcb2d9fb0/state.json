@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "status": "PARTIAL_CHAPTERS_NOT_FINAL",
+  "input": "input/doc/00_Source/02.Design/20.設計/14.IF/FO-088_設計書_AzureFiles連携共通インターフェース.xlsx",
+  "input_sha256": "d0adcb2d9fb077f4e02434e1b2a232a4ba03772e2d8958b3ac9b5cd768e21b75",
+  "input_git_blob": "97f67b07e639a37d4e29886331a5ebdcb4992f88",
+  "rules_git_blob": "1a201ae35a411952088cd960cc1cd61527218055",
+  "source_commit": "8bfdc69fe6806d6c45561f8ccd8ae015da82b8b3",
+  "total_sheets": 17,
+  "hidden_excluded": 7,
+  "revision_excluded": 1,
+  "eligible_sheets": 9,
+  "stored_artifacts": {"chapters01-03.md": {"sha256": "b8c25c28035b66bf50c51ca5d6a8d5b320998111098584c31dd1bb8a5d0d1f79"}},
+  "next_action": "Finish chapters 4-9 and selection QA from this design edition, save the actual candidates and run independent content and local Mermaid parse/render validation. There is no in-scope screen layout. Do not read hidden sheets or borrow the detailed edition.",
+  "existing_rules_and_python": "READ_ONLY",
+  "cleanup": "Only after final output, QA and report are saved and verified from main; retain other checkpoints."
+}

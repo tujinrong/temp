@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "run_id": "FO-007-design-2ee840f5c271",
+  "status": "DELIVERED_READBACK_VERIFIED",
+  "delivery_commit": "b3d7aa5f4100ff5169b5fbe1932d92f9c7ff2b28",
+  "source_path": "input/doc/00_Source/02.Design/20.設計/11.画面Extension/FO-007_設計書_仕入先トランザクション画面.xlsx",
+  "source_git_blob_sha": "9cecbf6fb404745bf19eda7ad11ccbe990f181b9",
+  "verification_method": "GitHub fetch_file on each final main path, matching whole-file Git blob SHA; not a new source conversion or full download into the runtime",
+  "final_files": {
+    "output/doc/00_Source/02.Design/20.設計/11.画面Extension/FO-007_設計書_仕入先トランザクション画面.md": "9b6c52971f10e341a7df59dcc016032502714b0c",
+    "qa/doc/00_Source/02.Design/20.設計/11.画面Extension/FO-007_設計書_仕入先トランザクション画面.md": "4848c9bf13df1a5d6557f351401b962bf74c63ee",
+    "report/doc/00_Source/02.Design/20.設計/11.画面Extension/FO-007_設計書_仕入先トランザクション画面.md": "fe2a61ac34700a2ad06b54c2ff264bc34c275e65"
+  },
+  "existing_rules_and_python": "UNCHANGED",
+  "cleanup": "Only checkpoint/FO-007-design-2ee840f5c271 removed after final read-back. Other checkpoints and source files preserved.",
+  "recovery_helper_tests": {"passed": 10, "total": 10, "scope": "local unit tests; not automatic GitHub synchronization"}
+}

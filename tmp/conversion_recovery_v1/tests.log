@@ -1,0 +1,15 @@
+test_changed_dependencies_rerun (test_state_store.RecoveryTests.test_changed_dependencies_rerun) ... ok
+test_complete_stage_reuses (test_state_store.RecoveryTests.test_complete_stage_reuses) ... ok
+test_exact_readback_receipt (test_state_store.RecoveryTests.test_exact_readback_receipt) ... ok
+test_incomplete_write_keeps_previous_manifest (test_state_store.RecoveryTests.test_incomplete_write_keeps_previous_manifest) ... ok
+test_local_save_not_remote_success (test_state_store.RecoveryTests.test_local_save_not_remote_success) ... ok
+test_missing_artifact_reruns_only_stage (test_state_store.RecoveryTests.test_missing_artifact_reruns_only_stage) ... ok
+test_path_escape_rejected (test_state_store.RecoveryTests.test_path_escape_rejected) ... ok
+test_same_artifact_is_idempotent (test_state_store.RecoveryTests.test_same_artifact_is_idempotent) ... ok
+test_tampering_is_rejected (test_state_store.RecoveryTests.test_tampering_is_rejected) ... ok
+test_wrong_remote_payload_rejected (test_state_store.RecoveryTests.test_wrong_remote_payload_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.009s
+
+OK

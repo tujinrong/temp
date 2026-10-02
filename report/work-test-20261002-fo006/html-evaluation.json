@@ -1,0 +1,10 @@
+{
+  "frame": true,
+  "noteOutside": true,
+  "noteBelow": true,
+  "tableRows": true,
+  "tableColumns": true,
+  "dataInside": true,
+  "target": true,
+  "controls": true
+}

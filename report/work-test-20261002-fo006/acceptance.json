@@ -1,0 +1,175 @@
+{
+  "markdown_sha256": "12db14502390528fbb5fa57c966da8472a461f95cf035f6b58b3278610eb66a8",
+  "source_sha256": "7532a78ea937a2772ea61106da6060b4ee276e9f12bd17b8cf45cd65db9cdc48",
+  "checks": [
+    {
+      "id": "C01",
+      "name": "原本バイト一致",
+      "passed": true,
+      "evidence": "GitHubから取得した383877バイトの原本と同一"
+    },
+    {
+      "id": "C02",
+      "name": "章順・原キー・H1",
+      "passed": true,
+      "evidence": "src.sheet_order.workbook_chapters：可視13シートの保存順"
+    },
+    {
+      "id": "C03",
+      "name": "対象外の除外",
+      "passed": true,
+      "evidence": "src.visible_scopeで6非表示シートと1変更履歴を除外；2凡例は本文に転記しない"
+    },
+    {
+      "id": "C04",
+      "name": "文書ID・版・日付",
+      "passed": true,
+      "evidence": "表紙B22/B24と共通ヘッダーW2/F2"
+    },
+    {
+      "id": "C05",
+      "name": "承認・更新者の区別",
+      "passed": true,
+      "evidence": "表紙F29:V31と共通ヘッダーAT2:BB3"
+    },
+    {
+      "id": "C06",
+      "name": "目的・使用タイミング",
+      "passed": true,
+      "evidence": "処理概要C6/C13：FO-008用マスタ管理"
+    },
+    {
+      "id": "C07",
+      "name": "同一支払方法・金額の複合重複",
+      "passed": true,
+      "evidence": "処理概要C10、項目Y42、補足C11:G12、画像の複合一意インデックス"
+    },
+    {
+      "id": "C08",
+      "name": "負数と0を区別",
+      "passed": true,
+      "evidence": "処理概要C9と画面項目Y41/Y56、0例示を矛盾のままQAへ保持"
+    },
+    {
+      "id": "C09",
+      "name": "ボディ項目の必須・任意対応",
+      "passed": true,
+      "evidence": "画面項目説明Q/U/Wの30,39,45,54,57行"
+    },
+    {
+      "id": "C10",
+      "name": "ルックアップを対象項目へ対応",
+      "passed": true,
+      "evidence": "項目説明Y34:AB37/Y49:AB52/Y59:AB62"
+    },
+    {
+      "id": "C11",
+      "name": "テーブルI/O区別",
+      "passed": true,
+      "evidence": "テーブル一覧AC6:AS7"
+    },
+    {
+      "id": "C12",
+      "name": "5フィールドと設定元",
+      "passed": true,
+      "evidence": "テーブル出力仕様M9/W9～M13/W13"
+    },
+    {
+      "id": "C13",
+      "name": "全角ｍと半角mを保持",
+      "passed": true,
+      "evidence": "出力仕様M9対貼り付けインデックス画像：文字種を自動修正しない"
+    },
+    {
+      "id": "C14",
+      "name": "フォーム名の矛盾を保持",
+      "passed": true,
+      "evidence": "画面レイアウトI6とオブジェクト一覧C7/S7"
+    },
+    {
+      "id": "C15",
+      "name": "イベントの条件・保存未確定",
+      "passed": true,
+      "evidence": "イベントC12/K14と保存ボタン、画像の保存順；即時自動保存とは断定しない"
+    },
+    {
+      "id": "C16",
+      "name": "既存QA全回答保持",
+      "passed": true,
+      "evidence": "Q01～Q08とR01～R03をバイト単位で保持"
+    },
+    {
+      "id": "C17",
+      "name": "画面列順",
+      "passed": true,
+      "evidence": "図形による現在の5列；元画像の古い支払手数料名を復活させない"
+    },
+    {
+      "id": "C18",
+      "name": "画面15例の値対応",
+      "passed": true,
+      "evidence": "DrawingML文字と例示行を対応；TQはローカルPDFで空白になる表示差を別途reportに記録"
+    },
+    {
+      "id": "C19",
+      "name": "画面外枠と注記の分離",
+      "passed": true,
+      "evidence": "HTMLの外枠と吹き出し2件：枠外の可視本文"
+    },
+    {
+      "id": "C20",
+      "name": "非営業日注記の対象",
+      "passed": true,
+      "evidence": "画面の赤点線内5行と吹き出し84の指示先"
+    },
+    {
+      "id": "C21",
+      "name": "重複例の空欄を補完しない",
+      "passed": true,
+      "evidence": "補足説明L12の空欄：更新後支払方法を捏造しない"
+    },
+    {
+      "id": "C22",
+      "name": "DFDの読み書き方向",
+      "passed": true,
+      "evidence": "DFDの図形50/51/31/8/24/49/62と原図矢印"
+    },
+    {
+      "id": "C23",
+      "name": "関連機能の分岐と4注記",
+      "passed": true,
+      "evidence": "機能関連図の接続と対象別説明、電債とでんさいを区別"
+    },
+    {
+      "id": "C24",
+      "name": "過去同値禁止を現行要件にしない",
+      "passed": true,
+      "evidence": "レビューNo.1と後続No.3を時系列で区別、現行例の2-1→2-1を保持"
+    },
+    {
+      "id": "C25",
+      "name": "プログラム画像の3系統",
+      "passed": true,
+      "evidence": "埋め込み946×486画像の3系統；存在しないチェック分岐を追加しない"
+    },
+    {
+      "id": "C26",
+      "name": "単位・小数精度を捏造しない",
+      "passed": true,
+      "evidence": "単位と桁数は原本未記載、40/60/95や0.00の表示から要件化しない"
+    },
+    {
+      "id": "C27",
+      "name": "内部リンクの参照先",
+      "passed": true,
+      "evidence": "全13シートと共通ルールのリンク先"
+    },
+    {
+      "id": "C28",
+      "name": "UTF-8/LF",
+      "passed": true,
+      "evidence": "UTF-8、BOMなし、LF"
+    }
+  ],
+  "scope": "source-derived semantic spot checks; same Work assistant performs source review, not an external gold standard"
+}

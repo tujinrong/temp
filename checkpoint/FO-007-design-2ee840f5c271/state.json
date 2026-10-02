@@ -1,0 +1,28 @@
+{
+  "schema": 2,
+  "run_id": "FO-007-design-2ee840f5c271",
+  "status": "BODY_RECOVERED_QA_REPORT_PENDING",
+  "repository": "tujinrong/temp",
+  "branch": "main",
+  "source": {
+    "path": "input/doc/00_Source/02.Design/20.設計/11.画面Extension/FO-007_設計書_仕入先トランザクション画面.xlsx",
+    "git_blob_sha": "9cecbf6fb404745bf19eda7ad11ccbe990f181b9",
+    "sha256": "2ee840f5c271f051507fca87ac1d86be2a8a2e3842128ba614badbdb02384b47"
+  },
+  "rules_git_blob_sha": "1a201ae35a411952088cd960cc1cd61527218055",
+  "artifacts": [{
+    "path": "candidate/output.md",
+    "git_blob_sha": "9b6c52971f10e341a7df59dcc016032502714b0c",
+    "bytes": 32305,
+    "role": "source-reviewed final body candidate, not yet final delivery"
+  }],
+  "prior_execution_record": {
+    "content": "39/39 checks passed in conversation record",
+    "browser": "14/14 checks passed in conversation record",
+    "mermaid": "1 diagram, 2 render profiles passed in conversation record",
+    "note": "Do not fabricate missing JSON logs. Restore and recheck final bytes before delivery."
+  },
+  "next_action": "Reuse candidate/output.md without converting the workbook again. Recover QA, create the report, verify links and rendering, then publish the three final files on the latest main.",
+  "complete_only_after": "Final paths read back with matching blob hashes.",
+  "cleanup": "Delete only this run checkpoint after verified final delivery. Preserve other run checkpoints and Git history."
+}

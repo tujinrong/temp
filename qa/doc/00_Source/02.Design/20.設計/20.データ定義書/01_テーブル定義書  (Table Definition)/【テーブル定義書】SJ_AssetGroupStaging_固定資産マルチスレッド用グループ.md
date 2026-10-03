@@ -1,0 +1,5 @@
+# SJ_AssetGroupStaging 固定資産マルチスレッド用グループ：質問・確認事項
+
+[本文](../../../../../../../output/doc/00_Source/02.Design/20.%E8%A8%AD%E8%A8%88/20.%E3%83%87%E3%83%BC%E3%82%BF%E5%AE%9A%E7%BE%A9%E6%9B%B8/01_%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E5%AE%9A%E7%BE%A9%E6%9B%B8%20%20%28Table%20Definition%29/%E3%80%90%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E5%AE%9A%E7%BE%A9%E6%9B%B8%E3%80%91SJ_AssetGroupStaging_%E5%9B%BA%E5%AE%9A%E8%B3%87%E7%94%A3%E3%83%9E%E3%83%AB%E3%83%81%E3%82%B9%E3%83%AC%E3%83%83%E3%83%89%E7%94%A8%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97.md) ／ [結果報告](../../../../../../../report/doc/00_Source/02.Design/20.%E8%A8%AD%E8%A8%88/20.%E3%83%87%E3%83%BC%E3%82%BF%E5%AE%9A%E7%BE%A9%E6%9B%B8/01_%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E5%AE%9A%E7%BE%A9%E6%9B%B8%20%20%28Table%20Definition%29/%E3%80%90%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E5%AE%9A%E7%BE%A9%E6%9B%B8%E3%80%91SJ_AssetGroupStaging_%E5%9B%BA%E5%AE%9A%E8%B3%87%E7%94%A3%E3%83%9E%E3%83%AB%E3%83%81%E3%82%B9%E3%83%AC%E3%83%83%E3%83%89%E7%94%A8%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97.md)
+
+今回の可視範囲の確認では、新規の質問・確認事項は抽出していない。原資料の空欄を確定仕様や「定義なし」とみなしたものではない。

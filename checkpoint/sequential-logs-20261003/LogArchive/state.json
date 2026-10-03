@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "status": "CANDIDATE_NOT_YET_EVALUATED",
+  "source": "input/doc/00_Source/02.Design/20.設計/20.データ定義書/01_テーブル定義書  (Table Definition)/【テーブル定義書】SJ_AccountingDataImportLogArchive_会計伝票情報ログアーカイブ.xlsx",
+  "source_git_blob": "c2234bebb2fade7d11716377d8915484954648c9",
+  "source_sha256": "217298634ca352561e1cc8a40d92c7bb94d87e61562849153319db126e9e3bb3",
+  "rules_git_blob": "1a201ae35a411952088cd960cc1cd61527218055",
+  "expected_diagrams": 0,
+  "artifacts": {"output.md": "fb461095d3b554215a085a5580aac408cf5c26c4", "qa.md": "479b18e03ac685a4635200b21cacaba6c625752b"},
+  "next_action": "Run independent source-record, browser and final gate; publish output/qa/report and read back. Candidate links target final locations, not checkpoint paths. Do not treat checkpoint files as completed conversion.",
+  "cleanup": "Delete only after all three final artifacts have been read back and hashes match. Other documents and existing rules/Python are read-only."
+}
